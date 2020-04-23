@@ -1,2 +1,20 @@
 .env
 node_modules
+server/prior/AccidentSL.csv
+server/prior/CasualtiesSL.csv
+server/prior/database.js
+server/prior/test.js
+server/prior/VehicleInAccidentSL.csv
+server/data/2019/Accident2019.csv
+server/data/2019/Casualties2019.csv
+server/data/2019/parser.py
+server/data/2019/VehicleInAccident2019.csv
+server/data/old/Accident.csv
+server/data/old/Accident2019 - Copy.csv
+server/data/old/asdas.py
+server/data/old/Casualties.csv
+server/data/old/parser.py
+server/data/old/VehicleInAccident.csv
+server/data/VehicleInAccident.csv
+server/data/Accident.csv
+server/data/Accident.csv

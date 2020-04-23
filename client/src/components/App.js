@@ -7,7 +7,7 @@ const App = () => {
 
     return (
         <div>
-            <input type="text" onChange={handleOnChange} />
+            <input type="text" onChange={handleOnChange} style = {{width: "1000px"}}/>
             <button onClick={handleButtonClick} disabled={disabled}>Meow</button>
             {renderResponse()}
         </div> 
