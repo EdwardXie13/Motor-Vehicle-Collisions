@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import server from '../apis/server';
 
 export default () => {
@@ -24,11 +24,31 @@ export default () => {
   }
 
   const renderResponse = () => {
-    return response.length > 0 ? response.map(r => {
-      return Object.entries(r).map(entry => {
-        return <div>{entry[0]}: {entry[1]}</div>
-      });
-    }) : null;
+    if (!response.length) return null;
+
+    let result = [];
+    let entry = [];
+
+    // Table Headers
+    for (let key in response[0]) {
+      entry.push(<th>{key}</th>)
+    }
+
+    result.push(<tr>{entry}</tr>);
+    entry = [];
+
+    for (let row of response) {
+      entry = Object.values(row).map(r => <td>{r}</td>);
+      result.push(<tr>{entry}</tr>);
+      entry = [];
+    }
+
+    return result;
+    // return response.length > 0 ? response.map(r => {
+    //   return Object.entries(r).map(entry => {
+    //     return <div>{entry[0]}: {entry[1]}</div>
+    //   });
+    // }) : null;
   };
 
   // [{}, {}, {}, ...]

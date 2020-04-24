@@ -1,3 +1,9 @@
 .table {
-    border: 1px black solid
+    border: 1px black solid;
+    width: 100%;
+}
+
+th, td {
+    text-align: left;
+    padding: 3px 10px;
 }
