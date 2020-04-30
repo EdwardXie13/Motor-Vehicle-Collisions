@@ -3,6 +3,8 @@ import server from '../apis/server';
 
 export default () => {
   const [query, setQuery] = useState('');
+  const [date1, setDate1] = useState('')
+  const [date2, setDate2] = useState('')
   const [response, setResponse] = useState([]);
   const [disabled, setDisabled] = useState(false);
 
@@ -10,9 +12,46 @@ export default () => {
     setQuery(e.target.value);
   }
 
+  const handleDate1Change = e => {
+    setDate1(e.target.value);
+    console.log(date1)
+  }
+
+  const handleDate2Change = e => {
+    setDate2(e.target.value);
+    console.log(date2)
+  }
+
   const handleButtonClick = () => {
     setDisabled(true);
     server.post('/user', { query: query })
+      .then(res => {
+        setResponse(res.data);
+        setDisabled(false);
+      })
+      .catch(err => {
+        setResponse([{error: err.response.data.sqlMessage}]);
+        setDisabled(false);
+    });
+  }
+
+  const handleDateClick = () => {
+    setDisabled(true);
+    let temp = `select * from Accident where CrashDate > '${date1}' and CrashDate < '${date2}' order by CrashDate`
+    console.log(temp)
+    server.post('/user', { query: temp })
+      .then(res => {
+        setResponse(res.data);
+        setDisabled(false);
+      })
+      .catch(err => {
+        setResponse([{error: err.response.data.sqlMessage}]);
+        setDisabled(false);
+    });
+  }
+  const handleQuery = (input) => {
+    setDisabled(true);
+    server.post('/user', { query: input })
       .then(res => {
         setResponse(res.data);
         setDisabled(false);
@@ -39,6 +78,7 @@ export default () => {
 
     for (let row of response) {
       entry = Object.values(row).map(r => <td>{r}</td>);
+
       result.push(<tr>{entry}</tr>);
       entry = [];
     }
@@ -54,5 +94,5 @@ export default () => {
   // [{}, {}, {}, ...]
   // [[<div>...</div>], [], [], ...]
 
-  return [handleButtonClick, handleOnChange, renderResponse, disabled];
+  return [handleButtonClick, handleOnChange, renderResponse, disabled, handleDate1Change, handleDate2Change, handleDateClick, handleQuery];
 }

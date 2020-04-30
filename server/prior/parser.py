@@ -5,6 +5,7 @@ file.close()
 
 Accident = Accident[1:]
 
+file = open("Accident.csv", "a+")
 for x in Accident:
   original = x
   x = x.split(',')
@@ -18,4 +19,5 @@ for x in Accident:
          original[3] + ',' + original[4] + ',' + original[5] + ',' +\
          original[6]
 
-  print(data)
+  file.write(data)
+file.close()
