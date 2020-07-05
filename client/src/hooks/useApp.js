@@ -49,9 +49,43 @@ export default () => {
         setDisabled(false);
     });
   }
-  const handleQuery = (input) => {
+  
+  const handleQuery1 = () => {
     setDisabled(true);
-    server.post('/user', { query: input })
+    // let temp = `select count(*) from Accident where CrashDate > '${date1}' and CrashDate < '${date2}' order by CrashDate`
+    //chance of casualty based on contributing factor from staten island of 2019
+    let query = `select ContributingFactor, count(*) as occurrences, sum(PersonsInjured), sum(PersonsKilled), sum(PersonsInjured)/count(*)*100 as percentage_chance_of_injury, sum(PersonsKilled)/count(*)*100 as percentage_chance_of_death from (VehicleInAccident inner join Accident on VehicleInAccident.CollisionID = Accident.CollisionID) inner join Casualties on Casualties.CollisionID = Accident.CollisionID group by ContributingFactor order by occurrences desc`
+    server.post('/user', { query: query })
+      .then(res => {
+        setResponse(res.data);
+        setDisabled(false);
+      })
+      .catch(err => {
+        setResponse([{error: err.response.data.sqlMessage}]);
+        setDisabled(false);
+    });
+  }
+
+  const handleQuery2 = () => {
+    setDisabled(true);
+    // let query = `select * from Casualties cross join (select CollisionID from Accident where CrashDate > '${date1}' and CrashDate < '${date2}') as a on Casualties.CollisionID = a.CollisionID`
+    let query = `select ContributingFactor, count(*) as occurrences, sum(PersonsInjured), sum(PersonsKilled), sum(PersonsInjured)/count(*)*100 as percentage_chance_of_injury, sum(PersonsKilled)/count(*)*100 as percentage_chance_of_death from (VehicleInAccident inner join Accident on VehicleInAccident.CollisionID = Accident.CollisionID) inner join Casualties on Casualties.CollisionID = Accident.CollisionID where month(CrashDate) = 1 group by ContributingFactor order by occurrences desc`
+    server.post('/user', { query: query })
+      .then(res => {
+        setResponse(res.data);
+        setDisabled(false);
+      })
+      .catch(err => {
+        setResponse([{error: err.response.data.sqlMessage}]);
+        setDisabled(false);
+    });
+  }
+
+  const handleQuery3 = () => {
+    setDisabled(true);
+    // let query = `select sum(PersonsInjured), sum(PersonsKilled) from Casualties cross join (select CollisionID from Accident where CrashDate > '${date1}' and CrashDate < '${date2}') as a on Casualties.CollisionID = a.CollisionID`
+    let query = `select ContributingFactor, count(*) as occurrences, sum(PersonsInjured), sum(PersonsKilled), sum(PersonsInjured)/count(*)*100 as percentage_chance_of_injury, sum(PersonsKilled)/count(*)*100 as percentage_chance_of_death from (VehicleInAccident inner join Accident on VehicleInAccident.CollisionID = Accident.CollisionID) inner join Casualties on Casualties.CollisionID = Accident.CollisionID where date(CrashDate) > '${date1}' and date(CrashDate) < '${date2}' group by ContributingFactor order by occurrences desc`
+    server.post('/user', { query: query})
       .then(res => {
         setResponse(res.data);
         setDisabled(false);
@@ -94,5 +128,5 @@ export default () => {
   // [{}, {}, {}, ...]
   // [[<div>...</div>], [], [], ...]
 
-  return [handleButtonClick, handleOnChange, renderResponse, disabled, handleDate1Change, handleDate2Change, handleDateClick, handleQuery];
+  return [handleButtonClick, handleOnChange, renderResponse, disabled, handleDate1Change, handleDate2Change, handleDateClick, handleQuery1, handleQuery2, handleQuery3];
 }
